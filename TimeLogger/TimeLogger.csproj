@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>2ee50c89-617a-4aaf-9883-5454cb63425b</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine.DragonFruit" Version="0.3.0-alpha.20214.1" />
+    <PackageReference Include="Toggl.Api" Version="1.0.6" />
+  </ItemGroup>
+
+</Project>

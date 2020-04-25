@@ -10,8 +10,9 @@ namespace TimeLogger
 {
     class Program
     {
-        static async Task<int> Main(string description, 
-            IConsole console, 
+        static async Task<int> Main(
+            IConsole console,
+            string? description = null, 
             string? togglApiKey = null, 
             string? project = null, 
             bool isBillable = true, 
@@ -32,6 +33,12 @@ namespace TimeLogger
                     return 0;
                 }
                 await client.TimeEntries.Stop(current);
+            }
+
+            //No description so we will treat it as a stop
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                return 0;
             }
 
             Workspace targetWorkspace = await GetWorkspace(client, workspace);

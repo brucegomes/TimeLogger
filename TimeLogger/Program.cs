@@ -15,7 +15,7 @@ namespace TimeLogger
             string? description = null, 
             string? togglApiKey = null, 
             string? project = null, 
-            bool isBillable = true, 
+            bool? isBillable = null, 
             string? workspace = null)
         {
             togglApiKey ??= Environment.GetEnvironmentVariable("TogglApiKey");
@@ -45,11 +45,10 @@ namespace TimeLogger
             
             Project? targetProject = await GetProject(client, project);
 
-
             await client.TimeEntries.Start(new TimeEntry
             {
                 Description = description,
-                IsBillable = isBillable,
+                IsBillable = isBillable ?? targetProject?.IsBillable,
                 CreatedWith = "Kevin's Console Automation",
                 ProjectId = targetProject?.Id,
                 WorkspaceId = targetWorkspace.Id

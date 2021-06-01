@@ -24,7 +24,7 @@ namespace TimeLogger
                 console.Error.Write("A toggle api key is required");
                 return 1;
             }
-            TogglClient client = new TogglClient(togglApiKey);
+            TogglClient client = new(togglApiKey);
             if (await client.TimeEntries.Current() is { } current &&
                 current.Id != null)
             {
@@ -49,7 +49,7 @@ namespace TimeLogger
             {
                 Description = description,
                 IsBillable = isBillable ?? targetProject?.IsBillable,
-                CreatedWith = "Kevin's Console Automation",
+                CreatedWith = "TimeLogger Console Automation",
                 ProjectId = targetProject?.Id,
                 WorkspaceId = targetWorkspace.Id
             });

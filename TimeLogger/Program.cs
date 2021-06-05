@@ -30,9 +30,9 @@ namespace TimeLogger
             {
                 if (current.Description == description)
                 {
+                    await client.TimeEntries.StopAsync(current);
                     return 0;
-                }
-                await client.TimeEntries.StopAsync(current);
+                }                
             }
 
             //No description so we will treat it as a stop

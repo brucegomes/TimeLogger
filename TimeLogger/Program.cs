@@ -25,14 +25,14 @@ namespace TimeLogger
                 return 1;
             }
             TogglClient client = new(togglApiKey);
-            if (await client.TimeEntries.Current() is { } current &&
+            if (await client.TimeEntries.GetCurrentAsync() is { } current &&
                 current.Id != null)
             {
                 if (current.Description == description)
                 {
                     return 0;
                 }
-                await client.TimeEntries.Stop(current);
+                await client.TimeEntries.StopAsync(current);
             }
 
             //No description so we will treat it as a stop
@@ -45,7 +45,7 @@ namespace TimeLogger
             
             Project? targetProject = await GetProject(client, project);
 
-            await client.TimeEntries.Start(new TimeEntry
+            await client.TimeEntries.StartAsync(new TimeEntry
             {
                 Description = description,
                 IsBillable = isBillable ?? targetProject?.IsBillable,
@@ -59,7 +59,7 @@ namespace TimeLogger
 
         private static async Task<Workspace> GetWorkspace(TogglClient client, string? workspace)
         {
-            List<Workspace> workspaces = await client.Workspaces.List();
+            List<Workspace> workspaces = await client.Workspaces.GetAllAsync();
 
             if (!string.IsNullOrWhiteSpace(workspace))
             {
@@ -85,11 +85,11 @@ namespace TimeLogger
             {
                 if (int.TryParse(project, out int projectId))
                 {
-                    return await client.Projects.Get(projectId);
+                    return await client.Projects.GetAsync(projectId);
                 }
                 else
                 {
-                    List<Project> allProjects = await client.Projects.List();
+                    List<Project> allProjects = await client.Projects.ListAsync();
                     return allProjects.FirstOrDefault(x =>
                         string.Equals(x.Name, project, StringComparison.OrdinalIgnoreCase));
                 }

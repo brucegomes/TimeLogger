@@ -16,7 +16,8 @@ namespace TimeLogger
             string? togglApiKey = null, 
             string? project = null, 
             bool? isBillable = null, 
-            string? workspace = null)
+            string? workspace = null,
+            string? start = null)
         {
             togglApiKey ??= Environment.GetEnvironmentVariable("TogglApiKey");
             if (string.IsNullOrWhiteSpace(togglApiKey))
@@ -36,17 +37,10 @@ namespace TimeLogger
             }
 
             Workspace targetWorkspace = await GetWorkspace(client, workspace);
-            
+
             Project? targetProject = await GetProject(client, project);
 
-            await client.TimeEntries.StartAsync(new TimeEntry
-            {
-                Description = description,
-                IsBillable = isBillable ?? targetProject?.IsBillable,
-                CreatedWith = "TimeLogger Console Automation",
-                ProjectId = targetProject?.Id,
-                WorkspaceId = targetWorkspace.Id
-            });
+            SubmitTimeEntry(client, description, targetProject, targetWorkspace, isBillable, start);
 
             return 0;
         }
@@ -90,6 +84,36 @@ namespace TimeLogger
             }
 
             return null;
+        }
+
+        private static async void SubmitTimeEntry(TogglClient client, String? description, Project? targetProject, Workspace targetWorkspace, bool? isBillable, String? start)
+        {
+            if (start != null)
+            {
+                await client.TimeEntries.CreateAsync(new TimeEntry
+                {
+                    Description = description,
+                    IsBillable = isBillable ?? targetProject?.IsBillable,
+                    CreatedWith = "TimeLogger Console Automation",
+                    ProjectId = targetProject?.Id,
+                    WorkspaceId = targetWorkspace.Id,
+                    Duration = 5400,
+                    Start = start
+                });
+            }
+            else
+            {
+                await client.TimeEntries.StartAsync(new TimeEntry
+                {
+                    Description = description,
+                    IsBillable = isBillable ?? targetProject?.IsBillable,
+                    CreatedWith = "TimeLogger Console Automation",
+                    ProjectId = targetProject?.Id,
+                    WorkspaceId = targetWorkspace.Id,
+                    Duration = 5400,
+                    Start = "2021-06-05T10:12:05.000Z"
+                });
+            }
         }
     }
 }

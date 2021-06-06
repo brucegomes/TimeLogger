@@ -35,12 +35,6 @@ namespace TimeLogger
                 }                
             }
 
-            //No description so we will treat it as a stop
-            if (string.IsNullOrWhiteSpace(description))
-            {
-                return 0;
-            }
-
             Workspace targetWorkspace = await GetWorkspace(client, workspace);
             
             Project? targetProject = await GetProject(client, project);

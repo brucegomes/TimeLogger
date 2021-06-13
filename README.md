@@ -20,7 +20,12 @@ Start a time for a given project with a description
 cadence --description "<descripton>" --project "<project name>"
 ```
 
-Stop the active time (omit the description; or use empty string)
+Stop the active time (use the same description from start; otherwise a new time entry will start)
 ```
-cadence --description "" --project "<project name>"
+cadence --description "<descripton>" --project "<project name>"
+```
+
+Create a time entry (use start and stop in ISO8601 as string, duration in minutes as int are required)
+```
+cadence --description "<descripton>" --project "<project name>" --start "2021-06-12T15:00:00-07:00" --duration 60 --stop "2021-06-12T14:00:00-07:00"
 ```

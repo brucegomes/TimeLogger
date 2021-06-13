@@ -37,7 +37,7 @@ namespace TimeLogger
                     return 0;
                 }                
             }
-
+            
             Workspace targetWorkspace = await GetWorkspace(client, workspace);
 
             Project? targetProject = await GetProject(client, project);
@@ -88,11 +88,11 @@ namespace TimeLogger
             return null;
         }
 
-        private static async System.Threading.Tasks.Task SubmitTimeEntryAsync(TogglClient client, String? description, Project? targetProject, Workspace targetWorkspace, bool? isBillable, String? start, String? stop, int? duration)
+        private static async Task<TimeEntry> SubmitTimeEntryAsync(TogglClient client, String? description, Project? targetProject, Workspace targetWorkspace, bool? isBillable, String? start, String? stop, int? duration)
         {
             if (!string.IsNullOrEmpty(start) && (!string.IsNullOrEmpty(stop) || duration != null))
-            {                
-                await client.TimeEntries.CreateAsync(new TimeEntry
+            {             
+                return await client.TimeEntries.CreateAsync(new TimeEntry
                 {
                     Description = description,
                     IsBillable = isBillable ?? targetProject?.IsBillable,
@@ -100,20 +100,20 @@ namespace TimeLogger
                     ProjectId = targetProject?.Id,
                     WorkspaceId = targetWorkspace.Id,
                     Start = start,
-                    Duration = duration,
+                    Duration = duration ?? (duration * 60),
                     Stop = stop
-                });                
+                });
             }
             else
             {                
-                await client.TimeEntries.StartAsync(new TimeEntry
+                return await client.TimeEntries.StartAsync(new TimeEntry
                 {
                     Description = description,
                     IsBillable = isBillable ?? targetProject?.IsBillable,
                     CreatedWith = "TimeLogger Console Automation",
                     ProjectId = targetProject?.Id,
                     WorkspaceId = targetWorkspace.Id                    
-                });                
+                });
             }
         }
     }

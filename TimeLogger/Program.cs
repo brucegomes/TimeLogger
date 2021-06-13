@@ -18,6 +18,7 @@ namespace TimeLogger
             bool? isBillable = null, 
             string? workspace = null,
             string? start = null,
+            int? duration = null,
             string? stop = null)
         {
             togglApiKey ??= Environment.GetEnvironmentVariable("TogglApiKey");
@@ -41,7 +42,7 @@ namespace TimeLogger
 
             Project? targetProject = await GetProject(client, project);
             
-            await SubmitTimeEntryAsync(client, description, targetProject, targetWorkspace, isBillable, start, stop);
+            await SubmitTimeEntryAsync(client, description, targetProject, targetWorkspace, isBillable, start, stop, duration);
             
             return 0;
         }
@@ -64,7 +65,7 @@ namespace TimeLogger
                     return workspaceByName;
                 }
             }
-
+                                  
             return workspaces.First();
         }
 
@@ -87,9 +88,9 @@ namespace TimeLogger
             return null;
         }
 
-        private static async System.Threading.Tasks.Task SubmitTimeEntryAsync(TogglClient client, String? description, Project? targetProject, Workspace targetWorkspace, bool? isBillable, String? start, String? stop)
+        private static async System.Threading.Tasks.Task SubmitTimeEntryAsync(TogglClient client, String? description, Project? targetProject, Workspace targetWorkspace, bool? isBillable, String? start, String? stop, int? duration)
         {
-            if (!string.IsNullOrEmpty(start))
+            if (!string.IsNullOrEmpty(start) && (!string.IsNullOrEmpty(stop) || duration != null))
             {                
                 await client.TimeEntries.CreateAsync(new TimeEntry
                 {
@@ -99,7 +100,7 @@ namespace TimeLogger
                     ProjectId = targetProject?.Id,
                     WorkspaceId = targetWorkspace.Id,
                     Start = start,
-                    Duration = 3600,
+                    Duration = duration,
                     Stop = stop
                 });                
             }

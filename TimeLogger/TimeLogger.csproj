@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <WarningLevel>4</WarningLevel>
     <UserSecretsId>2ee50c89-617a-4aaf-9883-5454cb63425b</UserSecretsId>
   </PropertyGroup>

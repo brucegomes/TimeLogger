@@ -88,7 +88,7 @@ namespace TimeLogger
             return null;
         }
 
-        private static async Task<TimeEntry> SubmitTimeEntryAsync(TogglClient client, String? description, Project? targetProject, Workspace targetWorkspace, bool? isBillable, String? start, String? stop, int? duration)
+        private static async Task<TimeEntry> SubmitTimeEntryAsync(TogglClient client, String? description, Project? targetProject, Workspace targetWorkspace, bool? isBillable, string? start, string? stop, int? duration)
         {
             if (!string.IsNullOrEmpty(start) && (!string.IsNullOrEmpty(stop) || duration != null))
             {             

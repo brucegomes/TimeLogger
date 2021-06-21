@@ -12,14 +12,14 @@ namespace TimeLogger
     {
         static async Task<int> Main(
             IConsole console,
-            string? description = null, 
-            string? togglApiKey = null, 
-            string? project = null, 
-            bool? isBillable = null, 
+            string? description = null,
+            string? togglApiKey = null,
+            string? project = null,
+            bool? isBillable = null,
             string? workspace = null,
-            string? start = null,
             int? duration = null,
-            string? stop = null)
+            DateTime? start = null,
+            DateTime? stop = null)
         {
             togglApiKey ??= Environment.GetEnvironmentVariable("TogglApiKey");
             if (string.IsNullOrWhiteSpace(togglApiKey))
@@ -35,15 +35,15 @@ namespace TimeLogger
                 {
                     await client.TimeEntries.StopAsync(current);
                     return 0;
-                }                
+                }
             }
-            
+
             Workspace targetWorkspace = await GetWorkspace(client, workspace);
 
             Project? targetProject = await GetProject(client, project);
-            
+
             await SubmitTimeEntryAsync(client, description, targetProject, targetWorkspace, isBillable, start, stop, duration);
-            
+
             return 0;
         }
 
@@ -65,7 +65,7 @@ namespace TimeLogger
                     return workspaceByName;
                 }
             }
-                                  
+
             return workspaces.First();
         }
 
@@ -88,10 +88,19 @@ namespace TimeLogger
             return null;
         }
 
-        private static async Task<TimeEntry> SubmitTimeEntryAsync(TogglClient client, String? description, Project? targetProject, Workspace targetWorkspace, bool? isBillable, string? start, string? stop, int? duration)
+        private static async Task<TimeEntry> SubmitTimeEntryAsync(
+            TogglClient client,
+            string? description,
+            Project? targetProject,
+            Workspace targetWorkspace,
+            bool? isBillable,
+            DateTime? start,
+            DateTime? stop,
+            int? duration)
         {
-            if (!string.IsNullOrEmpty(start) && (!string.IsNullOrEmpty(stop) || duration != null))
-            {             
+            if (start != null && (stop != null || duration != null))
+            {
+                stop ??= start + TimeSpan.FromMinutes(duration ?? 0);
                 return await client.TimeEntries.CreateAsync(new TimeEntry
                 {
                     Description = description,
@@ -99,20 +108,20 @@ namespace TimeLogger
                     CreatedWith = "TimeLogger Console Automation",
                     ProjectId = targetProject?.Id,
                     WorkspaceId = targetWorkspace.Id,
-                    Start = start,
-                    Duration = duration ?? (duration * 60),
-                    Stop = stop
+                    Duration = (long)(stop.Value - start.Value).TotalSeconds,
+                    Start = $"{start:O}",
+                    Stop = $"{stop:O}"
                 });
             }
             else
-            {                
+            {
                 return await client.TimeEntries.StartAsync(new TimeEntry
                 {
                     Description = description,
                     IsBillable = isBillable ?? targetProject?.IsBillable,
                     CreatedWith = "TimeLogger Console Automation",
                     ProjectId = targetProject?.Id,
-                    WorkspaceId = targetWorkspace.Id                    
+                    WorkspaceId = targetWorkspace.Id
                 });
             }
         }

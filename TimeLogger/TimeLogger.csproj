@@ -5,6 +5,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Version>1.0.0</Version>
+    <WarningLevel>4</WarningLevel>
     <UserSecretsId>2ee50c89-617a-4aaf-9883-5454cb63425b</UserSecretsId>
   </PropertyGroup>
 
@@ -21,10 +22,7 @@
     <RepositoryUrl>https://github.com/Keboo/TimeLogger</RepositoryUrl>
     <Title>Cadence</Title>
   </PropertyGroup>
-    
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="System.CommandLine.DragonFruit" Version="0.3.0-alpha.20214.1" />
     <PackageReference Include="Toggl.Api" Version="8.0.4" />

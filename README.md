@@ -25,7 +25,12 @@ Stop the active time (use the same description from start; otherwise a new time 
 cadence --description "<descripton>" --project "<project name>"
 ```
 
-Create a time entry (use start and stop in ISO 8601 as `string`, duration in minutes as `int` are required)
+Create a time entry (use start and stop are `DateTime` values)
 ```
 cadence --description "<descripton>" --project "<project name>" --start "2021-06-12T15:00:00-07:00" --duration 60 --stop "2021-06-12T14:00:00-07:00"
+```
+
+Create a time entry with duration (start is a `DateTime` value, duration is an `int` in minutes)
+```
+cadence --description "<descripton>" --project "<project name>" --start "2021-06-12T15:00:00-07:00" --duration 60
 ```

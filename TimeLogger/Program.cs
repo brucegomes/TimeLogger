@@ -29,13 +29,11 @@ namespace TimeLogger
             }
             TogglClient client = new(togglApiKey);
             if (await client.TimeEntries.GetCurrentAsync() is { } current &&
-                current.Id != null)
+                current.Id != null &&
+                current.Description == description)
             {
-                if (current.Description == description)
-                {
-                    await client.TimeEntries.StopAsync(current);
-                    return 0;
-                }
+                await client.TimeEntries.StopAsync(current);
+                return 0;
             }
 
             Workspace targetWorkspace = await GetWorkspace(client, workspace);
